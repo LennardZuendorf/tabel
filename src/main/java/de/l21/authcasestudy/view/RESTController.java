@@ -19,7 +19,6 @@ import java.util.List;
 public class RESTController {
 
     private final DBService service;
-
     Logger log = LoggerFactory.getLogger(RESTController.class);
 
     @PostMapping

@@ -3,7 +3,6 @@ package de.l21.authcasestudy.controller;
 import de.l21.authcasestudy.model.dao.RoleRepository;
 import de.l21.authcasestudy.model.dao.UserRepository;
 import de.l21.authcasestudy.model.dto.RoleEntity;
-import de.l21.authcasestudy.model.dto.RoleModel;
 import de.l21.authcasestudy.model.dto.UserEntity;
 import lombok.AllArgsConstructor;
 
@@ -29,18 +28,7 @@ public class DBService {
             Map<Long, UserEntity> users = ParsingService.parseUserCSV(userCsvStream);
             userRepository.saveAll(users.values());
 
-            List<RoleModel> roles = ParsingService.parseRoleCSV(roleCsvStream);
-
-            System.out.println("Parsed "+ users.size()+" users and "+ roles.size()+" roles");
-            System.out.println(userRepository.findAll().toString());
-
-            for (RoleModel role : roles) {
-                RoleEntity newRole = RoleEntity.builder()
-                        .role(role.getRole())
-                        .user(users.get(role.getUser_id())).build();
-                System.out.println(newRole);
-                roleRepository.save(newRole);
-            }
+            List<RoleEntity> roles=roleRepository.saveAll(ParsingService.parseRoleCSV(roleCsvStream, users));
             System.out.println("Saved "+users.size()+" users and their "+roles.size()+" roles");
 
             return List.copyOf(users.keySet());

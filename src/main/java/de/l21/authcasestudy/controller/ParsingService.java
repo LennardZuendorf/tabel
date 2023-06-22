@@ -1,5 +1,6 @@
 package de.l21.authcasestudy.controller;
 
+import de.l21.authcasestudy.model.dto.RoleEntity;
 import de.l21.authcasestudy.model.dto.RoleModel;
 import de.l21.authcasestudy.model.dto.UserEntity;
 import org.apache.commons.csv.*;
@@ -17,18 +18,18 @@ public class ParsingService {
             .withIgnoreHeaderCase()
             .withTrim();
 
-    public static List<RoleModel> parseRoleCSV(InputStream roleCsvStream) throws UnsupportedEncodingException {
+    public static List<RoleEntity> parseRoleCSV(InputStream roleCsvStream, Map<Long, UserEntity> userEntityMap) throws UnsupportedEncodingException {
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(roleCsvStream, "UTF-8"));
              CSVParser csvParser = new org.apache.commons.csv.CSVParser(fileReader, csvFormat))
         {
 
-            List<RoleModel> roleList = new ArrayList<>();
+            List<RoleEntity> roleList = new ArrayList<>();
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
 
-                RoleModel role = RoleModel.builder()
-                        .user_id(Long.parseLong(csvRecord.get("user_id")))
+                RoleEntity role = RoleEntity.builder()
+                        .user(userEntityMap.get(Long.parseLong(csvRecord.get("user_id"))))
                         .role(csvRecord.get("role")).build();
 
                 roleList.add(role);
