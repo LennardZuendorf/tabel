@@ -1,5 +1,6 @@
 package de.l21.authcasestudy.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -23,7 +24,9 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
+    @ToString.Exclude
     UserEntity user;
 
     @Column(name = "ROLE", nullable = false)

@@ -1,7 +1,6 @@
 package de.l21.authcasestudy.controller;
 
 import de.l21.authcasestudy.model.dto.RoleEntity;
-import de.l21.authcasestudy.model.dto.RoleModel;
 import de.l21.authcasestudy.model.dto.UserEntity;
 import org.apache.commons.csv.*;
 
@@ -28,11 +27,14 @@ public class ParsingService {
 
             for (CSVRecord csvRecord : csvRecords) {
 
-                RoleEntity role = RoleEntity.builder()
-                        .user(userEntityMap.get(Long.parseLong(csvRecord.get("user_id"))))
-                        .role(csvRecord.get("role")).build();
+                if(userEntityMap.containsKey(Long.parseLong(csvRecord.get("user_id")))){
 
-                roleList.add(role);
+                    RoleEntity role = RoleEntity.builder()
+                            .user(userEntityMap.get(Long.parseLong(csvRecord.get("user_id"))))
+                            .role(csvRecord.get("role")).build();
+
+                    roleList.add(role);
+                }
             }
 
             return roleList;
@@ -51,12 +53,16 @@ public class ParsingService {
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
-                UserEntity user = UserEntity.builder()
-                        .id(Long.parseLong(csvRecord.get("user_id")))
-                        .email(csvRecord.get("mail"))
-                        .build();
 
-                users.put(user.getId(), user);
+                if(!csvRecord.get("mail").contains("sparkasse")){
+
+                    UserEntity user = UserEntity.builder()
+                            .id(Long.parseLong(csvRecord.get("user_id")))
+                            .email(csvRecord.get("mail"))
+                            .build();
+
+                    users.put(user.getId(), user);
+                }
             }
 
             return users;

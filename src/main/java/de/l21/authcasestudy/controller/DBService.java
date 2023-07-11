@@ -23,6 +23,7 @@ public class DBService {
 
     public List<Long> parseAndSave(InputStream userCsvStream, InputStream roleCsvStream) throws UnsupportedEncodingException {
         try {
+            roleRepository.deleteAll();
             userRepository.deleteAll();
 
             Map<Long, UserEntity> users = ParsingService.parseUserCSV(userCsvStream);
